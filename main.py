@@ -4,7 +4,7 @@ from tkinter import ttk, messagebox
 
 from PIL import Image
 
-from config import accounts_name, account_select_by_name, add_config_account
+from config import accounts_name, account_select_by_name, add_config_account, delete_config_account, modify_config_account
 
 class App(ctk.CTk):
     def __init__(self):
@@ -103,9 +103,9 @@ class MainFrame(ctk.CTkFrame):
         # button 清除/刪除/修改
         self.btn_fb_clear =  ctk.CTkButton(self.frame_container, text='清空', text_color='#000000', font=('微軟正黑體', 16, 'bold'), command=lambda: self.inputs_clear('FB'))
         self.btn_fb_clear.place(relx=0.75, rely=0.15, relwidth=0.07, relheight=0.04, anchor='center')
-        self.btn_fb_modify = ctk.CTkButton(self.frame_container, text='修改', text_color='#000000', font=('微軟正黑體', 16, 'bold'), command=lambda: self.modify_account('FB', self.combo_fb_account))
+        self.btn_fb_modify = ctk.CTkButton(self.frame_container, text='修改', text_color='#000000', font=('微軟正黑體', 16, 'bold'), state='disabled', command=lambda: self.modify_account('FB', self.combo_fb_account))
         self.btn_fb_modify.place(relx=0.85, rely=0.15, relwidth=0.07, relheight=0.04, anchor='center')
-        self.btn_fb_delete = ctk.CTkButton(self.frame_container, text='刪除', font=('微軟正黑體', 16, 'bold'), fg_color='red')
+        self.btn_fb_delete = ctk.CTkButton(self.frame_container, text='刪除', font=('微軟正黑體', 16, 'bold'), state='disabled', fg_color='red', command=lambda: self.delete_account('FB', self.combo_fb_account))
         self.btn_fb_delete.place(relx=0.95, rely=0.15, relwidth=0.07, relheight=0.04, anchor='center')
         # 新增FB帳號/密碼
         self.lab_name_fb = ctk.CTkLabel(self.frame_container, text='名稱:', text_color='#000000', font=('微軟正黑體', 16, 'bold'))
@@ -135,9 +135,9 @@ class MainFrame(ctk.CTkFrame):
         # button 刪除/修改
         self.btn_ig_clear =  ctk.CTkButton(self.frame_container, text='清空', text_color='#000000', font=('微軟正黑體', 16, 'bold'), command=lambda: self.inputs_clear('IG'))
         self.btn_ig_clear.place(relx=0.75, rely=0.4, relwidth=0.07, relheight=0.04, anchor='center')
-        self.btn_ig_modify = ctk.CTkButton(self.frame_container, text='修改', text_color='#000000', font=('微軟正黑體', 16, 'bold'), command=lambda: self.modify_account('IG', self.combo_ig_account))
+        self.btn_ig_modify = ctk.CTkButton(self.frame_container, text='修改', text_color='#000000', font=('微軟正黑體', 16, 'bold'), state='disabled', command=lambda: self.modify_account('IG', self.combo_ig_account))
         self.btn_ig_modify.place(relx=0.85, rely=0.4, relwidth=0.07, relheight=0.04, anchor='center')
-        self.btn_ig_delete = ctk.CTkButton(self.frame_container, text='刪除', font=('微軟正黑體', 16, 'bold'), fg_color='red')
+        self.btn_ig_delete = ctk.CTkButton(self.frame_container, text='刪除', font=('微軟正黑體', 16, 'bold'), state='disabled', fg_color='red', command=lambda: self.delete_account('IG', self.combo_ig_account))
         self.btn_ig_delete.place(relx=0.95, rely=0.4, relwidth=0.07, relheight=0.04, anchor='center')
         # 新增IG帳號/密碼
         self.lab_name_ig = ctk.CTkLabel(self.frame_container, text='名稱:', text_color='#000000', font=('微軟正黑體', 16, 'bold'))
@@ -174,7 +174,9 @@ class MainFrame(ctk.CTkFrame):
         self.entry_acc_fb.insert(0, str(acc))
         self.entry_pwd_fb.delete(0, 'end')
         self.entry_pwd_fb.insert(0, str(pwd))  
-        self.btn_fb_add.configure(state='disabled')    
+        self.btn_fb_add.configure(state='disabled') 
+        self.btn_fb_delete.configure(state='normal')
+        self.btn_fb_modify.configure(state='normal')    
 
     def ig_account_selected(self, choice):
         account, index = account_select_by_name('IG', choice)
@@ -187,28 +189,31 @@ class MainFrame(ctk.CTkFrame):
         self.entry_acc_ig.insert(0, str(acc))
         self.entry_pwd_ig.delete(0, 'end')
         self.entry_pwd_ig.insert(0, str(pwd))  
-        self.btn_ig_add.configure(state='disabled')  
+        self.btn_ig_add.configure(state='disabled') 
+        self.btn_ig_delete.configure(state='normal') 
+        self.btn_ig_modify.configure(state='normal')
 
     def inputs_clear(self, acc_type):
         if acc_type == 'FB':
             self.entry_name_fb.delete(0, 'end')
             self.entry_acc_fb.delete(0, 'end')
             self.entry_pwd_fb.delete(0, 'end')
-            self.btn_fb_add.configure(state='normal')  
+            self.btn_fb_add.configure(state='normal') 
+            self.btn_fb_delete.configure(state='disabled') 
+            self.btn_fb_modify.configure(state='disabled')
         elif acc_type == 'IG':
             self.entry_name_ig.delete(0, 'end')
             self.entry_acc_ig.delete(0, 'end')
             self.entry_pwd_ig.delete(0, 'end')
             self.btn_ig_add.configure(state='normal')  
+            self.btn_ig_delete.configure(state='disabled')
+            self.btn_ig_modify.configure(state='disabled')
 
     def modify_account(self, acc_type, widget):
         acc = widget.get()
-        account, index = account_select_by_name(acc, acc_type)
-        # if self.top_modify is None or not self.top_modify.winfo_exists():  # 确保窗口不存在
-        #     self.top_modify = AccountModify(self)
-        #     self.top_modify.create_page(acc_type, acc)
-        # else:
-        #     self.top_modify.focus()
+        account, index = account_select_by_name(acc_type, acc)
+        print(account, index)
+        
 
     def create_account(self, input_name, acc_type, input_acc, input_pwd, widget):
         if input_name.get()=='' or input_acc.get()=='' or input_pwd.get()=='':
@@ -221,6 +226,33 @@ class MainFrame(ctk.CTkFrame):
             input_name.delete(0, 'end')
             input_acc.delete(0, 'end')
             input_pwd.delete(0, 'end')
+
+    def delete_account(self, acc_type, widget):
+        acc = widget.get()
+        msg = messagebox.askyesno(title='刪除帳號?', message=f'確定刪除{acc}的帳號設定嗎?')
+        if msg:
+            delete_config_account(acc_type, acc)
+            self.refresh_combo_accounts(acc_type, widget)
+            self.inputs_clear(acc_type)
+
+    def modify_account(self, acc_type, widget):
+        acc = widget.get()
+        data = ''
+        if acc_type == 'FB':
+            if self.entry_name_fb.get() == '' or self.entry_acc_fb.get() == '' or self.entry_pwd_fb.get() == '':
+                messagebox.showwarning(title='資料空白', message='請確認輸入框是否空白!')
+            else:
+                data = f'name={self.entry_name_fb.get()},type={acc_type},email={self.entry_acc_fb.get()},password={self.entry_pwd_fb.get()}\n'
+        elif acc_type == 'IG':
+            if self.entry_name_ig.get() == '' or self.entry_acc_ig.get() == '' or self.entry_pwd_ig.get() == '':
+                messagebox.showwarning(title='資料空白', message='請確認輸入框是否空白!')
+            else:
+                data = f'name={self.entry_name_ig.get()},type={acc_type},email={self.entry_acc_ig.get()},password={self.entry_pwd_ig.get()}\n'
+
+        modify_config_account(acc_type, acc, data)
+        self.refresh_combo_accounts(acc_type, widget)
+        self.inputs_clear(acc_type)
+
 
 class AccountModify(ctk.CTkToplevel):
     def __init__(self, master):

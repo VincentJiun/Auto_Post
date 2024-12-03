@@ -46,6 +46,30 @@ def add_config_account(data):
     with open('./config/account.ini', 'a', encoding='utf-8') as file:
         file.write(f'{data}\n')  # 添加换行符和自定义文字
 
+def delete_config_account(acc_type, acc_name):
+    acc, index=account_select_by_name(acc_type, acc_name)
+    with open('./config/account.ini', 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    if 0 <= index[0] < len(lines):
+        del lines[index[0]]
+
+    with open('./config/account.ini', 'w', encoding='utf-8') as file:
+        file.writelines(lines)
+
+def modify_config_account(acc_type, acc_name, data=None):
+    acc, index=account_select_by_name(acc_type, acc_name)
+    with open('./config/account.ini', 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    if 0 <= index[0] < len(lines) and data!=None:
+        lines[index[0]]=data
+
+    with open('./config/account.ini', 'w', encoding='utf-8') as file:
+        file.writelines(lines)
+    
+
+
 
 # if __name__ == '__main__':
 #     a= account_select_by_name('IG', 'test2')
