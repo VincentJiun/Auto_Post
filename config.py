@@ -5,7 +5,7 @@ def total_accounts():
             line = line.strip()  # 去除行首尾的空白字符
             if line:  # 確保非空行
                 # 解析每行的內容
-                parts = line.split(',')
+                parts = line.split(';')
                 entry = {}
                 for part in parts:
                     key, value = part.split('=')
@@ -71,6 +71,6 @@ def modify_config_account(acc_type, acc_name, data=None):
 
 
 
-# if __name__ == '__main__':
-#     a= account_select_by_name('IG', 'test2')
-#     print(a)
+if __name__ == '__main__':
+    a= total_accounts()
+    print(a)
