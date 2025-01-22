@@ -5,6 +5,7 @@ from tkinter import ttk, messagebox
 from PIL import Image
 
 from config import accounts_name, account_select_by_name, add_config_account, delete_config_account, modify_config_account
+from crawler import Facebook_Crawler
 
 class App(ctk.CTk):
     def __init__(self):
@@ -102,15 +103,22 @@ class MainFrame(ctk.CTkFrame):
         self.txt_fb_post = ctk.CTkTextbox(self.frame_container, font=('微軟正黑體', 16))
         self.txt_fb_post.place(relx=0.1, rely=0.25, relwidth=0.8, relheight=0.3, anchor='nw')
 
+        # 開始發文
+        self.btn_post = ctk.CTkButton(self.frame_container, font=('微軟正黑體', 18, 'bold'), text="開始貼文", command=self.fb_post)
+        self.btn_post.place(relx=0.5, rely=0.7, relwidth=0.15, relheight=0.05, anchor='nw')
+
     def fb_account_selected_by_name(self, choice):
         account, index = account_select_by_name('FB', choice)
-        acc = account[0]['email']
-        pwd = account[0]['password']
+        self.acc = account[0]['email']
+        self.pwd = account[0]['password']
         group = account[0]['group']
-        txt = f'帳號:{acc}  密碼:{pwd}'
+        txt = f'帳號:{self.acc}  密碼:{self.pwd}'
         self.lab_fb_acc_info.configure(text=txt)
 
-
+    def fb_post(self):
+        url = 'https://www.facebook.com/'
+        fb_crawler = Facebook_Crawler()
+        fb_crawler.post(url, self.acc, self.pwd)
 
     def create_ig_page(self):
         self.fb = ctk.CTkTextbox(self.frame_container, font=('微軟正黑體', 16))

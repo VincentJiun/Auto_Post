@@ -36,15 +36,15 @@ class Facebook_Crawler():
         self.driver = webdriver.Chrome(options=self.options, service=Service(DRIVER_PATH))
         self.login_state = False
 
-    def login(self):
-        self.driver.get(URL)
+    def login(self, url, acc, pwd):
+        self.driver.get(url)
         print('開始登入')
         # 搜尋 帳號/密碼 輸入框
         username = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.ID, 'email')))
         password = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.ID, 'pass')))
         submit = WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.NAME, 'login')))
-        username.send_keys(EMAIL)
-        password.send_keys(PASSWORD)
+        username.send_keys(acc)
+        password.send_keys(pwd)
         time.sleep(5)
         submit.click()
         print(f'請在{WAIT_MIN}分鐘內驗證登入!!!')
@@ -58,8 +58,8 @@ class Facebook_Crawler():
             print('登入失敗')
             self.driver.quit()
         
-    def post(self):
-        self.login()
+    def post(self, url, acc, pwd):
+        self.login(url, acc, pwd)
         time.sleep(5)
 
         if self.login_state:
