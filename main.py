@@ -285,6 +285,7 @@ class MainFrame(ctk.CTkFrame):
 
         modify_config_account(acc_type, acc, data)
         self.refresh_combo_accounts(acc_type, widget)
+        messagebox.showinfo(title='資料修改成功', message='資料修改成功!')
         self.inputs_clear(acc_type)
 
 

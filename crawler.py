@@ -72,3 +72,7 @@ class Facebook_Crawler():
             time.sleep(30)
             print('搜尋完畢')
             self.driver.quit()
+
+if __name__ == '__main__':
+    fb = Facebook_Crawler()
+    fb.post()
